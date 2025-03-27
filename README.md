@@ -2,6 +2,11 @@
 THIS IS FOR EDUCATIONAL PURPOSES ONLY!!!
 https://t.me/maxmycookies**
 
+Get free tools from MaxDEv for evilginx2 and free puppeteer advance go/js version
+
+https://t.me/newtonpmta
+
+
 # evilginx-puppeteer
 
 
